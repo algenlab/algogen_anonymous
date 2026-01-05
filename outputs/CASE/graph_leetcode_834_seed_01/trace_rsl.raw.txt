@@ -1,0 +1,131 @@
+```json
+{
+    "meta": {
+        "rsl_version": "0.1",
+        "notes": "Enhanced visualization for Sum of Distances in Tree algorithm with improved clarity and pacing"
+    },
+    "theme": {
+        "background": "#1E1E1E",
+        "text": "#FFFFFF",
+        "primary": "#4EC9B0",
+        "secondary": "#569CD6",
+        "accent": "#CE9178"
+    },
+    "timeline": {
+        "coalesce_minor_frames": true,
+        "max_fps_for_changes": 24,
+        "transition": 0.8,
+        "pause": 0.3
+    },
+   layout": {
+        "main": {
+            "type": "force_directed",
+            "params": {
+                "node_spacing": 3.5,
+                "edge_curve": 0.2
+            }
+        }
+    },
+    "rules": [
+        {
+            "when": {
+                "op": "showComment"
+            },
+            "do": {
+                "animation": {
+                    "variant": "fade",
+                    "run_time": 0.5,
+                    "easing": "ease-out"
+                }
+            }
+        },
+        {
+            "when": {
+                "op": "updateEdgeStyle"
+            },
+            "do": {
+                "animation": {
+                    "variant": "glow",
+                    "run_time": 0.6,
+                    "easing": "ease-in-out"
+                },
+                "style": {
+                    "stroke_width": 2.5
+                }
+            }
+        },
+        {
+            "when": {
+                "op": "updateNodeProperties"
+            },
+            "do": {
+                "animation": {
+                    "variant": "pulse",
+                    "run_time": 0.4,
+                    "easing": "ease-out"
+                },
+                "style": {
+                    "scale": 1.2
+                }
+            }
+        },
+        {
+            "when": {
+                "op": "updateNodeStyle"
+            },
+            "do": {
+                "animation": {
+                    "variant": "morph",
+                    "run_time": 0.7,
+                    "easing": "ease-in-out"
+                },
+                "style": {
+                    "glow": true
+                }
+            }
+        },
+        {
+            "when": {
+                "op": "updateTableCell"
+            },
+            "do": {
+                "animation": {
+                    "variant": "shake",
+                    "run_time": 0.3,
+                    "easing": "ease-out"
+                }
+            }
+        }
+    ],
+    "annotations": [
+        {
+            "frame": 0,
+            "type": "text",
+            "label": "Sum of Distances in Tree Algorithm",
+            "color": "#4EC9B0",
+            "position": [0, 2]
+        },
+        {
+            "frame": 10,
+            "type": "text",
+            "label": "Initializing node distances",
+            "color": "#569CD6",
+            "position": [0, 1.5]
+        },
+        {
+            "frame": 35,
+            "type": "text",
+            "label": "Processing tree traversal",
+            "color": "#CE9178",
+            "position": [0, 1.5]
+        },
+        {
+            "frame": 60,
+            "type": "text",
+            "label": "Final distance calculation",
+            "color": "#4EC9B0",
+            "position": [0, 1.5]
+        }
+    ]
+}
+```

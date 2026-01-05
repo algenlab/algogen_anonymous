@@ -1,0 +1,2498 @@
+{
+  "svl_version": "5.0",
+  "algorithm": {
+    "name": "Sum of Distances in Tree",
+    "family": "graph"
+  },
+  "required_extensions": [
+    "svl-ext-primitive-graph",
+    "svl-ext-view-table"
+  ],
+  "initial_frame": {
+    "data_schema": {},
+    "data_state": {
+      "type": "graph",
+      "structure": {
+        "nodes": [
+          {
+            "id": "0",
+            "label": "0",
+            "styleKey": "idle_node",
+            "properties": {
+              "subtree_size": 0,
+              "answer": 0
+            }
+          },
+          {
+            "id": "1",
+            "label": "1",
+            "styleKey": "idle_node",
+            "properties": {
+              "subtree_size": 0,
+              "answer": 0
+            }
+          },
+          {
+            "id": "2",
+            "label": "2",
+            "styleKey": "idle_node",
+            "properties": {
+              "subtree_size": 0,
+              "answer": 0
+            }
+          },
+          {
+            "id": "3",
+            "label": "3",
+            "styleKey": "idle_node",
+            "properties": {
+              "subtree_size": 0,
+              "answer": 0
+            }
+          },
+          {
+            "id": "4",
+            "label": "4",
+            "styleKey": "idle_node",
+            "properties": {
+              "subtree_size": 0,
+              "answer": 0
+            }
+          },
+          {
+            "id": "5",
+            "label": "5",
+            "styleKey": "idle_node",
+            "properties": {
+              "subtree_size": 0,
+              "answer": 0
+            }
+          }
+        ],
+        "edges": [
+          {
+            "from": "0",
+            "to": "1",
+            "directed": false,
+            "label": "",
+            "styleKey": "normal_edge"
+          },
+          {
+            "from": "0",
+            "to": "2",
+            "directed": false,
+            "label": "",
+            "styleKey": "normal_edge"
+          },
+          {
+            "from": "2",
+            "to": "3",
+            "directed": false,
+            "label": "",
+            "styleKey": "normal_edge"
+          },
+          {
+            "from": "2",
+            "to": "4",
+            "directed": false,
+            "label": "",
+            "styleKey": "normal_edge"
+          },
+          {
+            "from": "2",
+            "to": "5",
+            "directed": false,
+            "label": "",
+            "styleKey": "normal_edge"
+          }
+        ]
+      }
+    },
+    "auxiliary_views": [
+      {
+        "view_id": "subtree_table",
+        "type": "table",
+        "title": "Subtree Sizes & Answers",
+        "data": [
+          [
+            "Node",
+            "Subtree Size",
+            "Answer"
+          ],
+          [
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "2",
+            "0",
+            "0"
+          ],
+          [
+            "3",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "0",
+            "0"
+          ]
+        ],
+        "options": {
+          "row_headers": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "col_headers": [
+            "Node",
+            "Subtree Size",
+            "Answer"
+          ]
+        }
+      },
+      {
+        "view_id": "vars_panel",
+        "type": "table",
+        "title": "Variables",
+        "data": [
+          [
+            "current_node",
+            "None"
+          ],
+          [
+            "neighbor",
+            "None"
+          ],
+          [
+            "new_answer",
+            "None"
+          ]
+        ],
+        "options": {
+          "row_headers": [
+            "current_node",
+            "neighbor",
+            "new_answer"
+          ],
+          "col_headers": [
+            "Variable",
+            "Value"
+          ]
+        }
+      }
+    ],
+    "variables_schema": [
+      {
+        "name": "current_node",
+        "initial_value": null
+      },
+      {
+        "name": "neighbor",
+        "initial_value": null
+      },
+      {
+        "name": "new_answer",
+        "initial_value": null
+      }
+    ],
+    "pseudocode": [
+      "def sum_of_distances_in_tree(n, edges):",
+      "    # Build adjacency list",
+      "    adj = [[] for _ in range(n)]",
+      "    for u, v in edges:",
+      "        adj[u].append(v)",
+      "        adj[v].append(u)",
+      "    subtree_size = [0] * n",
+      "    answer = [0] * n",
+      "    # DFS1: compute subtree sizes and answer[0] (sum of distances from root)",
+      "    def dfs1(node, parent):",
+      "        subtree_size[node] = 1",
+      "        for neighbor in adj[node]:",
+      "            if neighbor == parent:",
+      "                continue",
+      "            dfs1(neighbor, node)",
+      "            subtree_size[node] += subtree_size[neighbor]",
+      "            answer[0] += subtree_size[neighbor]  # add for each edge",
+      "    dfs1(0, -1)",
+      "    # DFS2: rerooting to compute all answers",
+      "    def dfs2(node, parent):",
+      "        for neighbor in adj[node]:",
+      "            if neighbor == parent:",
+      "                continue",
+      "            answer[neighbor] = answer[node] - subtree_size[neighbor] + (n - subtree_size[neighbor])",
+      "            dfs2(neighbor, node)",
+      "    dfs2(0, -1)",
+      "    return answer"
+    ],
+    "code_highlight": 1,
+    "styles": {
+      "elementStyles": {
+        "idle_node": {
+          "backgroundColor": "#F0F0F0",
+          "textColor": "#000000"
+        },
+        "current_node": {
+          "backgroundColor": "#4CAF50",
+          "textColor": "#FFFFFF"
+        },
+        "visited_node": {
+          "backgroundColor": "#CCCCCC",
+          "textColor": "#000000"
+        },
+        "processing_node": {
+          "backgroundColor": "#FF9800",
+          "textColor": "#000000"
+        }
+      },
+      "edgeStyles": {
+        "normal_edge": {
+          "stroke": "#666666"
+        },
+        "active_edge": {
+          "stroke": "#FF5722",
+          "strokeWidth": 3
+        }
+      }
+    }
+  },
+  "deltas": [
+    {
+      "code_highlight": 10,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "0"
+              ],
+              "styleKey": "current_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "0"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 11,
+      "operations": [
+        [
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "0",
+                  "properties": {
+                    "subtree_size": 1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 12,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "0",
+                  "to": "1"
+                }
+              ],
+              "styleKey": "active_edge"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 10,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "1"
+              ],
+              "styleKey": "current_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 11,
+      "operations": [
+        [
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "1",
+                  "properties": {
+                    "subtree_size": 1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 17,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "1"
+              ],
+              "styleKey": "visited_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "None"
+                },
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "None"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 14,
+      "operations": [
+        [
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "0",
+                  "properties": {
+                    "subtree_size": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "2"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 15,
+      "operations": [
+        [
+          {
+            "op": "showComment",
+            "params": {
+              "text": "answer[0] += subtree_size[1] = 1 (total = 1)",
+              "anchor": "global"
+            }
+          },
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "0",
+                  "properties": {
+                    "answer": 1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 2,
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 16,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "0",
+                  "to": "1"
+                }
+              ],
+              "styleKey": "normal_edge"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 12,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "0",
+                  "to": "2"
+                }
+              ],
+              "styleKey": "active_edge"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "2"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 10,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "2"
+              ],
+              "styleKey": "current_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "2"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 11,
+      "operations": [
+        [
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "2",
+                  "properties": {
+                    "subtree_size": 1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 12,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "2",
+                  "to": "3"
+                }
+              ],
+              "styleKey": "active_edge"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "3"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 10,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "3"
+              ],
+              "styleKey": "current_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "3"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 11,
+      "operations": [
+        [
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "3",
+                  "properties": {
+                    "subtree_size": 1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 3,
+                  "col": 1,
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 17,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "3"
+              ],
+              "styleKey": "visited_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "None"
+                },
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "None"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 14,
+      "operations": [
+        [
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "2",
+                  "properties": {
+                    "subtree_size": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "2"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 15,
+      "operations": [
+        [
+          {
+            "op": "showComment",
+            "params": {
+              "text": "answer[0] += subtree_size[3] = 1 (total = 2)",
+              "anchor": "global"
+            }
+          },
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "0",
+                  "properties": {
+                    "answer": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 2,
+                  "value": "2"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 16,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "2",
+                  "to": "3"
+                }
+              ],
+              "styleKey": "normal_edge"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 12,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "2",
+                  "to": "4"
+                }
+              ],
+              "styleKey": "active_edge"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "4"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 10,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "4"
+              ],
+              "styleKey": "current_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "4"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 11,
+      "operations": [
+        [
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "4",
+                  "properties": {
+                    "subtree_size": 1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 4,
+                  "col": 1,
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 17,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "4"
+              ],
+              "styleKey": "visited_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "None"
+                },
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "None"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 14,
+      "operations": [
+        [
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "2",
+                  "properties": {
+                    "subtree_size": 3
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "3"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 15,
+      "operations": [
+        [
+          {
+            "op": "showComment",
+            "params": {
+              "text": "answer[0] += subtree_size[4] = 1 (total = 3)",
+              "anchor": "global"
+            }
+          },
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "0",
+                  "properties": {
+                    "answer": 3
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 2,
+                  "value": "3"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 16,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "2",
+                  "to": "4"
+                }
+              ],
+              "styleKey": "normal_edge"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 12,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "2",
+                  "to": "5"
+                }
+              ],
+              "styleKey": "active_edge"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 10,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "5"
+              ],
+              "styleKey": "current_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 11,
+      "operations": [
+        [
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "5",
+                  "properties": {
+                    "subtree_size": 1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 5,
+                  "col": 1,
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 17,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "5"
+              ],
+              "styleKey": "visited_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "None"
+                },
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "None"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 14,
+      "operations": [
+        [
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "2",
+                  "properties": {
+                    "subtree_size": 4
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "4"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 15,
+      "operations": [
+        [
+          {
+            "op": "showComment",
+            "params": {
+              "text": "answer[0] += subtree_size[5] = 1 (total = 4)",
+              "anchor": "global"
+            }
+          },
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "0",
+                  "properties": {
+                    "answer": 4
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 2,
+                  "value": "4"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 16,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "2",
+                  "to": "5"
+                }
+              ],
+              "styleKey": "normal_edge"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 17,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "2"
+              ],
+              "styleKey": "visited_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "None"
+                },
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "None"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 14,
+      "operations": [
+        [
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "0",
+                  "properties": {
+                    "subtree_size": 6
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "6"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 15,
+      "operations": [
+        [
+          {
+            "op": "showComment",
+            "params": {
+              "text": "answer[0] += subtree_size[2] = 4 (total = 8)",
+              "anchor": "global"
+            }
+          },
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "0",
+                  "properties": {
+                    "answer": 8
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 2,
+                  "value": "8"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 16,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "0",
+                  "to": "2"
+                }
+              ],
+              "styleKey": "normal_edge"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 17,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "0"
+              ],
+              "styleKey": "visited_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "None"
+                },
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "None"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 21,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "0"
+              ],
+              "styleKey": "current_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "0"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 22,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "0",
+                  "to": "1"
+                }
+              ],
+              "styleKey": "active_edge"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 23,
+      "operations": [
+        [
+          {
+            "op": "showComment",
+            "params": {
+              "text": "answer[1] = answer[0] - subtree_size[1] + (n - subtree_size[1]) = 8 - 1 + 5 = 12",
+              "anchor": "global"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "12"
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "1",
+                  "properties": {
+                    "answer": 12
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 2,
+                  "value": "12"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 24,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "0",
+                  "to": "1"
+                }
+              ],
+              "styleKey": "normal_edge"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "None"
+                },
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "None"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 21,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "1"
+              ],
+              "styleKey": "current_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 25,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "1"
+              ],
+              "styleKey": "visited_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "None"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 22,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "0",
+                  "to": "2"
+                }
+              ],
+              "styleKey": "active_edge"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "2"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 23,
+      "operations": [
+        [
+          {
+            "op": "showComment",
+            "params": {
+              "text": "answer[2] = answer[0] - subtree_size[2] + (n - subtree_size[2]) = 8 - 4 + 2 = 6",
+              "anchor": "global"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "6"
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "2",
+                  "properties": {
+                    "answer": 6
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 2,
+                  "col": 2,
+                  "value": "6"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 24,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "0",
+                  "to": "2"
+                }
+              ],
+              "styleKey": "normal_edge"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "None"
+                },
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "None"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 21,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "2"
+              ],
+              "styleKey": "current_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "2"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 22,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "2",
+                  "to": "3"
+                }
+              ],
+              "styleKey": "active_edge"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "3"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 23,
+      "operations": [
+        [
+          {
+            "op": "showComment",
+            "params": {
+              "text": "answer[3] = answer[2] - subtree_size[3] + (n - subtree_size[3]) = 6 - 1 + 5 = 10",
+              "anchor": "global"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "3",
+                  "properties": {
+                    "answer": 10
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 3,
+                  "col": 2,
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 24,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "2",
+                  "to": "3"
+                }
+              ],
+              "styleKey": "normal_edge"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "None"
+                },
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "None"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 21,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "3"
+              ],
+              "styleKey": "current_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "3"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 25,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "3"
+              ],
+              "styleKey": "visited_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "None"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 22,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "2",
+                  "to": "4"
+                }
+              ],
+              "styleKey": "active_edge"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "4"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 23,
+      "operations": [
+        [
+          {
+            "op": "showComment",
+            "params": {
+              "text": "answer[4] = answer[2] - subtree_size[4] + (n - subtree_size[4]) = 6 - 1 + 5 = 10",
+              "anchor": "global"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "4",
+                  "properties": {
+                    "answer": 10
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 4,
+                  "col": 2,
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 24,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "2",
+                  "to": "4"
+                }
+              ],
+              "styleKey": "normal_edge"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "None"
+                },
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "None"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 21,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "4"
+              ],
+              "styleKey": "current_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "4"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 25,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "4"
+              ],
+              "styleKey": "visited_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "None"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 22,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "2",
+                  "to": "5"
+                }
+              ],
+              "styleKey": "active_edge"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 23,
+      "operations": [
+        [
+          {
+            "op": "showComment",
+            "params": {
+              "text": "answer[5] = answer[2] - subtree_size[5] + (n - subtree_size[5]) = 6 - 1 + 5 = 10",
+              "anchor": "global"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateNodeProperties",
+            "params": {
+              "updates": [
+                {
+                  "id": "5",
+                  "properties": {
+                    "answer": 10
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "subtree_table",
+              "updates": [
+                {
+                  "row": 5,
+                  "col": 2,
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 24,
+      "operations": [
+        [
+          {
+            "op": "updateEdgeStyle",
+            "params": {
+              "edges": [
+                {
+                  "from": "2",
+                  "to": "5"
+                }
+              ],
+              "styleKey": "normal_edge"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "None"
+                },
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "None"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 21,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "5"
+              ],
+              "styleKey": "current_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 25,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "5"
+              ],
+              "styleKey": "visited_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "None"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 25,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "2"
+              ],
+              "styleKey": "visited_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "None"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 25,
+      "operations": [
+        [
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "0"
+              ],
+              "styleKey": "visited_node"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "None"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 27,
+      "operations": [
+        [
+          {
+            "op": "showComment",
+            "params": {
+              "text": "Algorithm completed. Final answer array: [8, 12, 6, 10, 10, 10]",
+              "anchor": "global"
+            }
+          },
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "0"
+              ],
+              "styleKey": "idle_node"
+            }
+          },
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "1"
+              ],
+              "styleKey": "idle_node"
+            }
+          },
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "2"
+              ],
+              "styleKey": "idle_node"
+            }
+          },
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "3"
+              ],
+              "styleKey": "idle_node"
+            }
+          },
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "4"
+              ],
+              "styleKey": "idle_node"
+            }
+          },
+          {
+            "op": "updateNodeStyle",
+            "params": {
+              "ids": [
+                "5"
+              ],
+              "styleKey": "idle_node"
+            }
+          }
+        ]
+      ]
+    }
+  ]
+}

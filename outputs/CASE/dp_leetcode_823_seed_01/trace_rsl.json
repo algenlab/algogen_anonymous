@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "rsl_version": "0.1",
+    "notes": "Binary Trees With Factors algorithm visualization focusing on table operations"
+  },
+  "theme": {
+    "background": "#FFFFFF",
+    "text": "#000000",
+    "primary": "#2563EB",
+    "secondary": "#10B981",
+    "accent": "#F59E0B"
+  },
+  "timeline": {
+    "coalesce_minor_frames": true,
+    "max_fps_for_changes": 24,
+    "transition": 0.5,
+    "pause": 0.3
+  },
+  "layout": {
+    "main": {
+      "type": "grid",
+      "params": {
+        "cell_size": 1.2,
+        "spacing": 0.5,
+        "grid_cols": 2
+      }
+    }
+  },
+  "rules": [
+    {
+      "when": {
+        "op": "highlightTableCell"
+      },
+      "do": {
+        "animation": {
+          "variant": "pulse",
+          "run_time": 0.8,
+          "easing": "ease-in-out"
+        },
+        "style": {
+          "glow": true,
+          "scale": 1.1,
+          "stroke_width": 3.0
+        }
+      }
+    },
+    {
+      "when": {
+        "op": "showComment"
+      },
+      "do": {
+        "animation": {
+          "variant": "fade",
+          "run_time": 0.4,
+          "easing": "ease-out"
+        },
+        "style": {
+          "glow": false,
+          "scale": 1.0,
+          "stroke_width": 1.0
+        }
+      }
+    },
+    {
+      "when": {
+        "op": "showDependency"
+      },
+      "do": {
+        "animation": {
+          "variant": "glow",
+          "run_time": 1.0,
+          "easing": "ease-in-out"
+        },
+        "style": {
+          "glow": true,
+          "scale": 1.05,
+          "stroke_width": 2.5
+        }
+      }
+    },
+    {
+      "when": {
+        "op": "updateTableCell"
+      },
+      "do": {
+        "animation": {
+          "variant": "morph",
+          "run_time": 0.6,
+          "easing": "ease-in-out"
+        },
+        "style": {
+          "glow": false,
+          "scale": 1.0,
+          "stroke_width": 2.0
+        }
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "frame": 0,
+      "type": "text",
+      "label": "Binary Trees With Factors Algorithm",
+      "color": "#2563EB",
+      "position": [
+        0.5,
+        -0.5
+      ]
+    },
+    {
+      "frame": 2,
+      "type": "text",
+      "label": "Dynamic Programming Table",
+      "color": "#10B981",
+      "position": [
+        0.5,
+        -0.3
+      ]
+    }
+  ]
+}

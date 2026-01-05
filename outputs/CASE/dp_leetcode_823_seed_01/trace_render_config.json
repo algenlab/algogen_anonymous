@@ -1,0 +1,69 @@
+{
+  "algorithm_info": {
+    "name": "Binary Trees With Factors",
+    "family": "dp",
+    "data_type": "table"
+  },
+  "layout_strategy": {
+    "main_view": {
+      "type": "grid",
+      "params": {
+        "cell_size": 1.2,
+        "spacing": 0.5,
+        "grid_cols": 2
+      }
+    },
+    "auxiliary_views": {
+      "position": "left",
+      "max_width": 0.3,
+      "vertical_spacing": 0.2
+    },
+    "pseudocode": {
+      "position": "top-left",
+      "font_size": 14,
+      "max_lines": 24
+    }
+  },
+  "style_overrides": {
+    "color_scheme": {
+      "background": "#FFFFFF",
+      "text": "#000000",
+      "primary": "#2563EB",
+      "secondary": "#10B981",
+      "accent": "#F59E0B"
+    },
+    "element_styles": {},
+    "animation_timing": {
+      "transition": 0.5,
+      "pause": 0.3,
+      "node_highlight": 0.3,
+      "edge_update": 0.4,
+      "cell_update": 0.3,
+      "array_swap": 0.5
+    }
+  },
+  "visual_enhancements": {
+    "custom_annotations": [
+      {
+        "frame": 0,
+        "type": "text",
+        "label": "Binary Trees With Factors Algorithm",
+        "color": "#2563EB",
+        "position": [
+          0.5,
+          -0.5
+        ]
+      },
+      {
+        "frame": 2,
+        "type": "text",
+        "label": "Dynamic Programming Table",
+        "color": "#10B981",
+        "position": [
+          0.5,
+          -0.3
+        ]
+      }
+    ]
+  }
+}

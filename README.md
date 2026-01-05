@@ -13,6 +13,7 @@ python -m pip install -r requirements.txt
 
 Notes:
 - Recommended: Python 3.10, Manim 0.18.1.
+- You need a SiliconFlow (硅基流动) API key and set `SILICONFLOW_API_KEY` in your environment.
 - Manim may require system-level dependencies (e.g., `ffmpeg`, `cairo`, `pango`, and a LaTeX distribution if you render formulas).
 
 ### 1. Run the full pipeline (batch all txt under `example/`)

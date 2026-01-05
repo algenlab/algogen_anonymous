@@ -1,0 +1,387 @@
+{
+  "svl_version": "5.0",
+  "algorithm": {
+    "name": "Binary Trees With Factors",
+    "family": "Dynamic Programming"
+  },
+  "required_extensions": [
+    "svl-ext-view-table"
+  ],
+  "initial_frame": {
+    "data_schema": {},
+    "data_state": {
+      "type": "table",
+      "data": [
+        [
+          1,
+          1
+        ]
+      ],
+      "options": {
+        "row_headers": [
+          "dp"
+        ],
+        "col_headers": [
+          "2",
+          "4"
+        ]
+      }
+    },
+    "auxiliary_views": [
+      {
+        "view_id": "vars_panel",
+        "type": "table",
+        "title": "Variables",
+        "data": [
+          [
+            "i",
+            null
+          ],
+          [
+            "j",
+            null
+          ],
+          [
+            "right",
+            null
+          ],
+          [
+            "k",
+            null
+          ]
+        ],
+        "options": {
+          "row_headers": [
+            "i",
+            "j",
+            "right",
+            "k"
+          ],
+          "col_headers": [
+            "name",
+            "value"
+          ]
+        }
+      }
+    ],
+    "variables_schema": [
+      {
+        "name": "i",
+        "initial_value": null
+      },
+      {
+        "name": "j",
+        "initial_value": null
+      },
+      {
+        "name": "right",
+        "initial_value": null
+      },
+      {
+        "name": "k",
+        "initial_value": null
+      }
+    ],
+    "pseudocode": [
+      "def numFactoredBinaryTrees(arr):",
+      "    arr.sort()",
+      "    n = len(arr)",
+      "    dp = [1] * n",
+      "    index = {x: i for i, x in enumerate(arr)}",
+      "    MOD = 10**9 + 7",
+      "    for i in range(n):",
+      "        for j in range(i):",
+      "            if arr[i] % arr[j] == 0:",
+      "                right = arr[i] // arr[j]",
+      "                if right in index:",
+      "                    k = index[right]",
+      "                    dp[i] = (dp[i] + dp[j] * dp[k]) % MOD",
+      "    return sum(dp) % MOD"
+    ],
+    "code_highlight": 1,
+    "styles": {
+      "elementStyles": {
+        "idle": {
+          "backgroundColor": "#F0F0F0",
+          "textColor": "#000000"
+        },
+        "current_cell": {
+          "backgroundColor": "#FFD700",
+          "textColor": "#000000"
+        },
+        "dependency_cell": {
+          "backgroundColor": "#90EE90",
+          "textColor": "#000000"
+        }
+      },
+      "tempStyles": {
+        "dep_arrow": {
+          "color": "#FF0000",
+          "strokeWidth": 2.5
+        }
+      }
+    }
+  },
+  "deltas": [
+    {
+      "code_highlight": 7,
+      "operations": [
+        [
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          {
+            "op": "highlightTableCell",
+            "params": {
+              "view_id": "data_state",
+              "cells": [
+                {
+                  "row": 0,
+                  "col": 0
+                }
+              ],
+              "styleKey": "current_cell"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 14,
+      "operations": [
+        [
+          {
+            "op": "highlightTableCell",
+            "params": {
+              "view_id": "data_state",
+              "cells": [
+                {
+                  "row": 0,
+                  "col": 0
+                }
+              ],
+              "styleKey": "idle"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 7,
+      "operations": [
+        [
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          {
+            "op": "highlightTableCell",
+            "params": {
+              "view_id": "data_state",
+              "cells": [
+                {
+                  "row": 0,
+                  "col": 1
+                }
+              ],
+              "styleKey": "current_cell"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 8,
+      "operations": [
+        [
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          {
+            "op": "highlightTableCell",
+            "params": {
+              "view_id": "data_state",
+              "cells": [
+                {
+                  "row": 0,
+                  "col": 0
+                }
+              ],
+              "styleKey": "current_cell"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 9,
+      "operations": [
+        [
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "2"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 11,
+      "operations": [
+        [
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 3,
+                  "col": 1,
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          {
+            "op": "highlightTableCell",
+            "params": {
+              "view_id": "data_state",
+              "cells": [
+                {
+                  "row": 0,
+                  "col": 0
+                }
+              ],
+              "styleKey": "dependency_cell"
+            }
+          },
+          {
+            "op": "showDependency",
+            "params": {
+              "view_id": "data_state",
+              "from_cells": [
+                {
+                  "row": 0,
+                  "col": 0
+                },
+                {
+                  "row": 0,
+                  "col": 0
+                }
+              ],
+              "to_cell": {
+                "row": 0,
+                "col": 1
+              },
+              "styleKey": "dep_arrow"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "data_state",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "2"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 13,
+      "operations": [
+        [
+          {
+            "op": "highlightTableCell",
+            "params": {
+              "view_id": "data_state",
+              "cells": [
+                {
+                  "row": 0,
+                  "col": 0
+                }
+              ],
+              "styleKey": "idle"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 14,
+      "operations": [
+        [
+          {
+            "op": "highlightTableCell",
+            "params": {
+              "view_id": "data_state",
+              "cells": [
+                {
+                  "row": 0,
+                  "col": 1
+                }
+              ],
+              "styleKey": "idle"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 15,
+      "operations": [
+        [
+          {
+            "op": "showComment",
+            "params": {
+              "text": "Total number of binary trees = 3 (mod 1000000007)",
+              "anchor": "global"
+            }
+          }
+        ]
+      ]
+    }
+  ]
+}
