@@ -1,0 +1,25 @@
+算法附加片段（Binary Trees With Factors）：
+
+- 题目描述 (Problem Description)：
+  Given an array of unique integers, arr, where each integer arr[i] is strictly
+  greater than 1. We make a binary tree using these integers, and each number may
+  be used for any number of times. Each non-leaf node's value should be equal to
+  the product of the values of its children. Return the number of binary trees we
+  can make. The answer may be too large so return the answer modulo 109 + 7.
+  Example 1: Input: arr = [2,4] Output: 3 Explanation: We can make these trees:
+  [2], [4], [4, 2, 2] Example 2: Input: arr = [2,4,5,10] Output: 7 Explanation: We
+  can make these trees: [2], [4], [5], [10], [4, 2, 2], [10, 2, 5], [10, 5, 2].
+  Constraints: 1 <= arr.length <= 1000 2 <= arr[i] <= 109 All the values of arr
+  are unique.
+
+- LeetCode题号 (Problem ID): 823
+- 难度 (Difficulty): Medium
+- 目标 (Goal)：生成 `dp_tracker.py` 的内容。
+- 用户请求 (User Request)：请为"Binary Trees With Factors（动态规划）"创建可视化追踪器。
+
+- 输入 (Input)：
+```python
+input_data = {
+   "[2,4]"
+}
+```

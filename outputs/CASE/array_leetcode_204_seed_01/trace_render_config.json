@@ -1,0 +1,88 @@
+{
+  "algorithm_info": {
+    "name": "Sieve of Eratosthenes",
+    "family": "array",
+    "data_type": "array"
+  },
+  "layout_strategy": {
+    "main_view": {
+      "type": "horizontal_array",
+      "params": {
+        "spacing": 0.5,
+        "cell_size": 1.0
+      }
+    },
+    "auxiliary_views": {
+      "position": "left",
+      "max_width": 0.3,
+      "vertical_spacing": 0.2
+    },
+    "pseudocode": {
+      "position": "top-left",
+      "font_size": 14,
+      "max_lines": 24
+    }
+  },
+  "style_overrides": {
+    "color_scheme": {
+      "background": "#FFFFFF",
+      "text": "#000000",
+      "primary": "#2563EB",
+      "secondary": "#DC2626",
+      "accent": "#16A34A"
+    },
+    "element_styles": {},
+    "animation_timing": {
+      "transition": 0.5,
+      "pause": 0.3,
+      "node_highlight": 0.3,
+      "edge_update": 0.4,
+      "cell_update": 0.3,
+      "array_swap": 0.5
+    }
+  },
+  "visual_enhancements": {
+    "custom_annotations": [
+      {
+        "frame": 0,
+        "type": "text",
+        "label": "Initialize array with numbers 2-10",
+        "color": "#2563EB",
+        "position": [
+          0,
+          -2
+        ]
+      },
+      {
+        "frame": 2,
+        "type": "text",
+        "label": "Mark multiples of 2 as non-prime",
+        "color": "#DC2626",
+        "position": [
+          0,
+          -2
+        ]
+      },
+      {
+        "frame": 6,
+        "type": "text",
+        "label": "Mark multiples of 3 as non-prime",
+        "color": "#DC2626",
+        "position": [
+          0,
+          -2
+        ]
+      },
+      {
+        "frame": 12,
+        "type": "text",
+        "label": "Remaining numbers are prime",
+        "color": "#16A34A",
+        "position": [
+          0,
+          -2
+        ]
+      }
+    ]
+  }
+}

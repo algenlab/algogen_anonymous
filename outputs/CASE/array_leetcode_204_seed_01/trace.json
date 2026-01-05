@@ -1,0 +1,520 @@
+{
+  "svl_version": "5.0",
+  "algorithm": {
+    "name": "Sieve of Eratosthenes",
+    "family": "array"
+  },
+  "required_extensions": [
+    "svl-ext-primitive-array",
+    "svl-ext-view-table"
+  ],
+  "initial_frame": {
+    "data_schema": {},
+    "data_state": {
+      "type": "array",
+      "structure": [
+        {
+          "index": 0,
+          "value": "T",
+          "state": "idle"
+        },
+        {
+          "index": 1,
+          "value": "T",
+          "state": "idle"
+        },
+        {
+          "index": 2,
+          "value": "T",
+          "state": "idle"
+        },
+        {
+          "index": 3,
+          "value": "T",
+          "state": "idle"
+        },
+        {
+          "index": 4,
+          "value": "T",
+          "state": "idle"
+        },
+        {
+          "index": 5,
+          "value": "T",
+          "state": "idle"
+        },
+        {
+          "index": 6,
+          "value": "T",
+          "state": "idle"
+        },
+        {
+          "index": 7,
+          "value": "T",
+          "state": "idle"
+        },
+        {
+          "index": 8,
+          "value": "T",
+          "state": "idle"
+        },
+        {
+          "index": 9,
+          "value": "T",
+          "state": "idle"
+        }
+      ]
+    },
+    "auxiliary_views": [
+      {
+        "view_id": "vars_panel",
+        "type": "table",
+        "title": "Variables",
+        "data": [
+          [
+            "i",
+            "None"
+          ],
+          [
+            "j",
+            "None"
+          ],
+          [
+            "count",
+            "None"
+          ]
+        ],
+        "options": {
+          "row_headers": [
+            "i",
+            "j",
+            "count"
+          ],
+          "col_headers": [
+            "name",
+            "value"
+          ]
+        }
+      }
+    ],
+    "variables_schema": [
+      {
+        "name": "i",
+        "initial_value": null
+      },
+      {
+        "name": "j",
+        "initial_value": null
+      },
+      {
+        "name": "count",
+        "initial_value": null
+      }
+    ],
+    "pseudocode": [
+      "def count_primes(n):",
+      "    if n <= 2: return 0",
+      "    is_prime = [True] * n",
+      "    is_prime[0] = is_prime[1] = False",
+      "    for i in range(2, int(n**0.5)+1):",
+      "        if is_prime[i]:",
+      "            for j in range(i*i, n, i):",
+      "                is_prime[j] = False",
+      "    return sum(is_prime)"
+    ],
+    "code_highlight": 1,
+    "styles": {
+      "elementStyles": {
+        "idle": {
+          "backgroundColor": "#F0F0F0",
+          "textColor": "#000000"
+        },
+        "current": {
+          "backgroundColor": "#4CAF50",
+          "textColor": "#FFFFFF"
+        },
+        "marking": {
+          "backgroundColor": "#FFD700",
+          "textColor": "#000000"
+        },
+        "prime": {
+          "backgroundColor": "#90EE90",
+          "textColor": "#000000"
+        },
+        "non_prime": {
+          "backgroundColor": "#FF9999",
+          "textColor": "#000000"
+        }
+      }
+    }
+  },
+  "deltas": [
+    {
+      "code_highlight": 3,
+      "operations": [
+        [
+          {
+            "op": "updateValues",
+            "params": {
+              "updates": [
+                {
+                  "index": 0,
+                  "value": "F"
+                },
+                {
+                  "index": 1,
+                  "value": "F"
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateStyle",
+            "params": {
+              "indices": [
+                0,
+                1
+              ],
+              "styleKey": "non_prime"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 5,
+      "operations": [
+        [
+          {
+            "op": "updateStyle",
+            "params": {
+              "indices": [
+                2
+              ],
+              "styleKey": "current"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "2"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 6,
+      "operations": [
+        [
+          {
+            "op": "updateStyle",
+            "params": {
+              "indices": [
+                2
+              ],
+              "styleKey": "prime"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 7,
+      "operations": [
+        [
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "4"
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateValues",
+            "params": {
+              "updates": [
+                {
+                  "index": 4,
+                  "value": "F"
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateStyle",
+            "params": {
+              "indices": [
+                4
+              ],
+              "styleKey": "marking"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 7,
+      "operations": [
+        [
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "6"
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateValues",
+            "params": {
+              "updates": [
+                {
+                  "index": 6,
+                  "value": "F"
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateStyle",
+            "params": {
+              "indices": [
+                6
+              ],
+              "styleKey": "marking"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 7,
+      "operations": [
+        [
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "8"
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateValues",
+            "params": {
+              "updates": [
+                {
+                  "index": 8,
+                  "value": "F"
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateStyle",
+            "params": {
+              "indices": [
+                8
+              ],
+              "styleKey": "marking"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 4,
+      "operations": [
+        [
+          {
+            "op": "updateStyle",
+            "params": {
+              "indices": [
+                2
+              ],
+              "styleKey": "prime"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 5,
+      "operations": [
+        [
+          {
+            "op": "updateStyle",
+            "params": {
+              "indices": [
+                3
+              ],
+              "styleKey": "current"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 0,
+                  "col": 1,
+                  "value": "3"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 6,
+      "operations": [
+        [
+          {
+            "op": "updateStyle",
+            "params": {
+              "indices": [
+                3
+              ],
+              "styleKey": "prime"
+            }
+          },
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "2"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 7,
+      "operations": [
+        [
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 1,
+                  "col": 1,
+                  "value": "9"
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateValues",
+            "params": {
+              "updates": [
+                {
+                  "index": 9,
+                  "value": "F"
+                }
+              ]
+            }
+          },
+          {
+            "op": "updateStyle",
+            "params": {
+              "indices": [
+                9
+              ],
+              "styleKey": "marking"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 4,
+      "operations": [
+        [
+          {
+            "op": "updateStyle",
+            "params": {
+              "indices": [
+                3
+              ],
+              "styleKey": "prime"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "code_highlight": 9,
+      "operations": [
+        [
+          {
+            "op": "updateTableCell",
+            "params": {
+              "view_id": "vars_panel",
+              "updates": [
+                {
+                  "row": 2,
+                  "col": 1,
+                  "value": "4"
+                }
+              ]
+            }
+          },
+          {
+            "op": "showComment",
+            "params": {
+              "text": "Found 4 prime numbers less than 10",
+              "anchor": "global"
+            }
+          }
+        ]
+      ]
+    }
+  ]
+}

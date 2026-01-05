@@ -1,0 +1,121 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Rendering Script Language (RSL) Schema v0.1",
+  "type": "object",
+  "required": ["meta", "layout", "rules", "timeline"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["rsl_version"],
+      "properties": {
+        "rsl_version": { "type": "string", "enum": ["0.1"] },
+        "notes": { "type": "string" }
+      }
+    },
+    "theme": {
+      "type": "object",
+      "properties": {
+        "background": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "text": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "primary": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "secondary": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "accent": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+      }
+    },
+    "timeline": {
+      "type": "object",
+      "required": ["transition", "pause"],
+      "properties": {
+        "coalesce_minor_frames": { "type": "boolean" },
+        "max_fps_for_changes": { "type": "number", "minimum": 1, "maximum": 30 },
+        "transition": { "type": "number", "minimum": 0.1, "maximum": 2.0 },
+        "pause": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "required": ["main"],
+      "properties": {
+        "main": {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["force_directed", "hierarchical", "circular", "grid", "matrix", "horizontal_array"]
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "node_spacing": { "type": "number", "minimum": 1.0, "maximum": 10.0 },
+                "edge_curve": { "type": "number", "minimum": -1.0, "maximum": 1.0 },
+                "cell_size": { "type": "number", "minimum": 0.3, "maximum": 2.0 },
+                "spacing": { "type": "number", "minimum": 0.1, "maximum": 2.0 },
+                "grid_cols": { "type": "integer", "minimum": 1 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["when", "do"],
+        "properties": {
+          "when": {
+            "type": "object",
+            "properties": {
+              "op": { "type": "string" },
+              "code_highlight_in": { "type": "array", "items": { "type": "integer", "minimum": 1 } }
+            },
+            "additionalProperties": true
+          },
+          "do": {
+            "type": "object",
+            "properties": {
+              "animation": {
+                "type": "object",
+                "properties": {
+                  "variant": { "type": "string", "enum": ["pulse", "glow", "shake", "fade", "morph"] },
+                  "run_time": { "type": "number", "minimum": 0.1, "maximum": 2.0 },
+                  "easing": { "type": "string" }
+                }
+              },
+              "style": {
+                "type": "object",
+                "properties": {
+                  "glow": { "type": "boolean" },
+                  "scale": { "type": "number", "minimum": 0.5, "maximum": 2.0 },
+                  "stroke_width": { "type": "number", "minimum": 0.5, "maximum": 10.0 }
+                }
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "annotations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["frame", "type"],
+        "properties": {
+          "frame": { "type": "integer", "minimum": 0 },
+          "type": { "type": "string", "enum": ["arrow", "text", "highlight", "circle"] },
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "label": { "type": "string" },
+          "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+          "position": { "type": "array", "items": { "type": "number" } }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}
+
+
+

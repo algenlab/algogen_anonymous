@@ -1,0 +1,155 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SVL Manim Render Configuration",
+  "description": "LLM生成的算法可视化渲染配置",
+  "type": "object",
+  "required": ["algorithm_info", "layout_strategy", "style_overrides"],
+  "properties": {
+    "algorithm_info": {
+      "type": "object",
+      "required": ["name", "family", "data_type"],
+      "properties": {
+        "name": {"type": "string", "description": "算法名称，如 Dijkstra"},
+        "family": {
+          "type": "string",
+          "enum": [
+            "graph_search", "graph_topology", "graph_mst", "graph_flow",
+            "sorting", "dp", "data_structure", "tree", "array"
+          ],
+          "description": "算法家族"
+        },
+        "data_type": {
+          "type": "string",
+          "enum": ["array", "graph", "tree", "table", "hashtable"],
+          "description": "主数据结构类型"
+        }
+      }
+    },
+    "layout_strategy": {
+      "type": "object",
+      "required": ["main_view"],
+      "properties": {
+        "main_view": {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "force_directed", "grid", "hierarchical", "circular",
+                "horizontal_array", "vertical_array", "matrix"
+              ],
+              "description": "布局算法类型"
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "node_spacing": {"type": "number", "minimum": 1.0, "maximum": 10.0},
+                "edge_curve": {"type": "number", "minimum": -1.0, "maximum": 1.0},
+                "center_important_nodes": {"type": "boolean"},
+                "grid_cols": {"type": "integer", "minimum": 1},
+                "cell_size": {"type": "number", "minimum": 0.3, "maximum": 2.0},
+                "spacing": {"type": "number", "minimum": 0.1, "maximum": 2.0}
+              }
+            }
+          }
+        },
+        "auxiliary_views": {
+          "type": "object",
+          "properties": {
+            "position": {
+              "type": "string",
+              "enum": ["left", "right", "top", "bottom", "none"]
+            },
+            "max_width": {"type": "number", "minimum": 0.1, "maximum": 0.5},
+            "vertical_spacing": {"type": "number", "minimum": 0.1, "maximum": 1.0}
+          }
+        },
+        "pseudocode": {
+          "type": "object",
+          "properties": {
+            "position": {
+              "type": "string",
+              "enum": ["top-left", "top-right", "left", "none"]
+            },
+            "font_size": {"type": "integer", "minimum": 10, "maximum": 20},
+            "max_lines": {"type": "integer", "minimum": 5, "maximum": 30}
+          }
+        }
+      }
+    },
+    "style_overrides": {
+      "type": "object",
+      "properties": {
+        "color_scheme": {
+          "type": "object",
+          "properties": {
+            "primary": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+            "secondary": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+            "accent": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+            "background": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+            "text": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"}
+          }
+        },
+        "element_styles": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "object",
+              "properties": {
+                "fill": {"type": "string"},
+                "stroke": {"type": "string"},
+                "stroke_width": {"type": "number", "minimum": 0.5, "maximum": 10.0},
+                "text_color": {"type": "string"},
+                "opacity": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+                "scale": {"type": "number", "minimum": 0.5, "maximum": 3.0},
+                "glow": {"type": "boolean"}
+              }
+            }
+          }
+        },
+        "animation_timing": {
+          "type": "object",
+          "properties": {
+            "node_highlight": {"type": "number", "minimum": 0.1, "maximum": 2.0},
+            "edge_update": {"type": "number", "minimum": 0.1, "maximum": 2.0},
+            "cell_update": {"type": "number", "minimum": 0.1, "maximum": 2.0},
+            "array_swap": {"type": "number", "minimum": 0.1, "maximum": 2.0},
+            "transition": {"type": "number", "minimum": 0.1, "maximum": 2.0},
+            "pause": {"type": "number", "minimum": 0.0, "maximum": 1.0}
+          }
+        }
+      }
+    },
+    "visual_enhancements": {
+      "type": "object",
+      "properties": {
+        "show_distance_labels": {"type": "boolean"},
+        "highlight_shortest_path": {"type": "boolean"},
+        "animate_relaxation": {"type": "boolean"},
+        "show_priority_queue": {"type": "boolean"},
+        "show_dp_dependencies": {"type": "boolean"},
+        "emphasize_comparisons": {"type": "boolean"},
+        "custom_annotations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["frame", "type"],
+            "properties": {
+              "frame": {"type": "integer", "minimum": 0},
+              "type": {
+                "type": "string",
+                "enum": ["arrow", "text", "highlight", "circle"]
+              },
+              "from": {"type": "string"},
+              "to": {"type": "string"},
+              "label": {"type": "string"},
+              "color": {"type": "string"},
+              "position": {"type": "array", "items": {"type": "number"}}
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1226 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Core Idea] Three-Version Self-Verification + Explicit Improvement Process
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Important: You MUST output three versions of the code, gradually improving it and finally submitting a perfect final version!
+
+Strictly prohibited:
+- Do NOT ask the user any questions (e.g. "please confirm", "which algorithm do you need" etc.)
+- Do NOT request any additional information from the user
+- Do NOT output incomplete code or explanatory-only text
+- You MUST infer autonomously from the given input data and problem description and directly generate complete code
+
+Principles for handling ambiguity:
+1. If the problem ID and the input data do not fully match, prioritize the type/structure of the input data
+2. If multiple algorithm variants are possible, choose the most standard implementation
+3. If a parameter meaning is ambiguous, use the most common interpretation
+4. In summary: autonomously infer + directly generate. This is an automated pipeline with NO user interaction!
+
+Generation workflow (you MUST explicitly output each stage):
+1. Version 1 (Draft): quickly generate an initial version of the code
+2. Self-check: list the problems you found
+3. Version 2 (Fixes): fix ALL issues from Version 1
+4. Final verification: verify algorithm correctness and field alignment
+5. Version 3 (Final Submission): perfect code
+
+We will extract Version 3 as the final output.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Primary Principle: Algorithmic Correctness – Highest Priority]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Algorithmic logic errors are the most serious problems. No visualization effect can compensate for an incorrect algorithm implementation.
+
+Core requirements:
+1. All key steps of the algorithm MUST be fully implemented (no omissions)
+2. The execution order and conditional logic MUST be correct (no disorder)
+3. Boundary and special cases MUST be handled correctly (no ignoring)
+
+Common critical errors (MUST be avoided):
+- Bellman-Ford only performs relaxation without negative-cycle detection
+- BFS/DFS revisits already visited nodes, or fails to mark visited status correctly
+- Sorting algorithms use incorrect comparison conditions, resulting in unsorted or unstable outputs
+- DP uses incorrect transition logic, or incorrect base case initialization
+- Dijkstra does not always choose the node with minimum distance, or relaxation logic is wrong
+- Graph algorithms do not sort adjacency lists, making results non-reproducible
+
+Verification questions (MUST be answered before generation):
+1. What are the core steps of this algorithm? Have I implemented all of them?
+2. Are critical conditions and loop boundaries correct?
+3. Are boundary cases (empty input, single element, special values) handled correctly?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Hard Rules] 13 Non-Negotiable Constraints
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1.  svl_version = "5.0" (string, NOT numeric 5.0)
+2.  operations MUST be a 2D array [[...]] (even for a single operation, use [[{op}]])
+3.  code_highlight MUST be an integer or an array of integers (None/null is forbidden)
+4.  Infinity/-Infinity/"Infinity" are forbidden (use None to represent undefined)
+5.  data_state.type MUST be one of {array, graph, table, tree, hashtable}
+6.  Field naming constraints (extremely important!):
+    - Array/Graph/Tree/Hashtable: MUST use the field name structure
+    - Table/DP: MUST use the field name data (NOT structure)
+7.  The main view reference MUST use view_id="data_state" (forbidden: "dp_table", "main_table", "table_view")
+8.  The code MUST be executable and generate a trace.json file
+9.  Algorithm logic MUST be completely correct (most critical!)
+10. Array swapping MUST use updateValues to swap values (the nonexistent swapElements operation is forbidden)
+11. Delta structure MUST be {"code_highlight": N, "operations": [[...]]} (a frame field is forbidden)
+12. Variable names MUST be in English (Chinese variable names are forbidden)
+13. updateTableCell/updateNodeProperties and similar are rendering instructions; they do NOT modify Python variables! You MUST first update Python variables, then render.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Code Structure] Strict Ordering Requirements
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The code MUST follow this exact order:
+1. Import statements
+2. Plan comment (triple-quoted string, containing pseudocode)
+3. Input data definition (input_data = {...})
+4. Main function definition (def main():)
+5. Function call (if __name__ == "__main__": main())
+
+Example of a Plan comment:
+```python
+"""
+Plan JSON:
+{
+  "pseudocode": [
+    "def algorithm(input):",
+    "    step 1",
+    "    step 2",
+    "    return result"
+  ]
+}
+"""
+```
+
+The pseudocode will be copied into initial_frame.pseudocode and MUST be split line by line into a list[str].
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[General Generation Constraints] MUST be followed
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Readability and contrast (mandatory):
+- Pure white fill #FFFFFF is forbidden
+- labelColor/textColor MUST be explicitly set to ensure labels are clearly visible
+- Avoid "white text on white background"; if you must use a very light background, ensure sufficient contrast
+
+2. Temporal consistency (Select → Process → Mark):
+- First select current (or equivalent focus) → complete the processing for this step → then mark as visited/processed
+- Within one frame, an element MUST NOT be both current and visited at the same time
+
+3. Determinism (reproducibility):
+- There MUST be a stable tie-breaking rule when multiple candidates are equally good:
+  - Graph: by node ID or input order
+  - Array/Sorting: by index
+  - DP: by (i, j)
+- Traversal and selection order MUST be fixed to input order or explicit sorting
+- For graph algorithms (BFS/Dijkstra/DFS etc.), adjacency lists MUST be sorted before the main loop!
+  ```python
+  # Example: ensure reproducibility
+  for node in graph:
+      graph[node] = sorted(graph[node])  # sort by node ID
+  ```
+- You MUST NOT rely on undefined order or hash iteration
+
+4. Input consistency:
+- Only update nodes/edges that exist in initial_frame
+- If new elements are needed, add them first (add) and then update
+- Do NOT automatically add reverse edges (unless the problem explicitly states an undirected graph)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Algorithm Family Specific Requirements] Key Constraints
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Graph Algorithms (BFS/DFS/Dijkstra/Bellman-Ford, etc.)
+
+Required auxiliary views:
+1. frontier (type:"list", view_id:"frontier")
+   - Format MUST be `"<id>(<score>)"` or `"<id>(None)"`
+   - Examples: `"B(5)"`, `"C(None)"`
+   - Forbidden: `"B"` (bare ID)
+   - Forbidden: `{ "id": "B", "dist": 5 }` (object format)
+
+2. distance_table (type:"table", view_id:"distance_table")
+   - Columns are node IDs, cells are int|None
+   - None means unreachable (rendered as "∞")
+
+Synchronization rules (when a relaxation succeeds):
+- You MUST update node properties + distance_table + frontier at the same time
+- frontier update: first popFromList the old value, then appendToList the new value
+- It is forbidden to only update node properties without updating auxiliary views
+
+Algorithm-specific requirements:
+- Bellman-Ford: MUST perform negative-cycle detection (the |V|-th relaxation round)
+- Dijkstra: MUST always choose the node with minimum distance
+- BFS/DFS: MUST correctly mark visited to avoid revisiting nodes
+
+Displaying algorithm return values (when applicable):
+
+For algorithms that have a return value (e.g. Bellman-Ford returning a boolean, binary search returning an index), you MUST:
+
+1. Declare the return variable in variables_schema
+2. Initialize it as None in a vars_panel entry in auxiliary_views
+3. Update the return value and display it at the end of the algorithm
+
+```python
+# Example: Bellman-Ford negative-cycle detection
+# 1. Declare in variables_schema
+"variables_schema": [
+    {"name": "current", "initial_value": None},
+    {"name": "alt", "initial_value": None},
+    {"name": "has_negative_cycle", "initial_value": None}  # return value
+]
+
+# 2. Initialize in vars_panel
+auxiliary_views.append({
+    "view_id": "vars_panel",
+    "type": "table",
+    "title": "Variables",
+    "data": [
+        ["current", None],
+        ["alt", None],
+        ["has_negative_cycle", None]  # third row
+    ]
+})
+
+# 3. Update the return value at the end of the algorithm
+has_negative_cycle = False  # or True (depending on detection result)
+
+# Operations for the final frame
+final_operations = [
+    # Update the return value in vars_panel
+    {"op": "updateTableCell", "params": {
+        "view_id": "vars_panel",
+        "updates": [{"row": 2, "col": 1, "value": str(has_negative_cycle).upper()}]
+    }},
+    # Show a global comment
+    {"op": "showComment", "params": {
+        "text": f"Algorithm returns: {has_negative_cycle}",
+        "anchor": "global"
+    }}
+]
+```
+
+## Dynamic Programming (LCS / Edit Distance / Knapsack, etc.)
+
+Data structure:
+- type: "table" (do NOT invent type names like "dp_table")
+- data: 2D array
+- view_id: "data_state" (you MUST use this ID when updating)
+
+State transitions:
+- Base cases MUST be initialized correctly
+- State transition logic MUST be complete (no missing branches)
+- Use updateTableCell to update cells
+- Use showDependency to display transition arrows
+
+Critical warning about data synchronization (very error-prone!):
+
+`updateTableCell` is ONLY a rendering instruction; it does NOT modify the Python variables!
+
+```python
+# Incorrect example (leads to algorithmic bugs)
+dp = [[0]  (n+1) for _ in range(m+1)]
+
+# Only renders; the dp variable is unchanged!
+operations.append([{
+    "op": "updateTableCell",
+    "params": {
+        "view_id": "data_state",
+        "updates": [{"row": i, "col": j, "value": 5}]
+    }
+}])
+
+# Bug! dp[i][j] is still 0, not 5!
+if dp[i][j] > 0:  # Here dp[i][j] is still 0!
+    do_something()
+
+# Correct example (update Python variable first, then render)
+dp = [[0]  (n+1) for _ in range(m+1)]
+
+# 1. First compute and update the Python variable
+dp[i][j] = 5
+
+# 2. Then render using updateTableCell
+operations.append([{
+    "op": "updateTableCell",
+    "params": {
+        "view_id": "data_state",
+        "updates": [{"row": i, "col": j, "value": dp[i][j]}]  # use dp[i][j]
+    }
+}])
+
+# 3. Subsequent logic uses the Python variable
+if dp[i][j] > 0:  # Correct! dp[i][j] is now 5
+    do_something()
+```
+
+Remember:
+1. First modify the data structure using Python statements (dp[i][j] = ...)
+2. Then render the visualization with updateTableCell
+3. Subsequent logic MUST use the Python variables, not values in the trace
+
+## Array / Sorting Algorithms (QuickSort / MergeSort / BubbleSort, etc.)
+
+Swap operations:
+- Use updateValues to swap values (via the updated array state)
+- The nonexistent swapElements operation is forbidden
+
+Comparison and marking:
+- Mark as comparing first, then perform swaps/moves
+- Comparison conditions MUST be correct (ascending/descending/stability)
+
+Algorithm-specific requirements:
+- QuickSort: MUST correctly choose the pivot and perform partitioning
+- MergeSort: MUST correctly merge two sorted subarrays
+- BubbleSort: MUST correctly compare adjacent elements
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[VTA 5.0 Core Specification]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 1. Top-Level Structure
+
+```python
+trace = {
+    "svl_version": "5.0",  # MUST be a string
+    "algorithm": {"name": "AlgorithmName", "family": "AlgorithmFamily"},
+    "required_extensions": [...],  # Declare based on the data types used
+    "initial_frame": {
+        "data_schema": {},
+        "data_state": {...},
+        "auxiliary_views": [...],
+        "variables_schema": [...],
+        "pseudocode": [...],  # copied from the Plan (split line by line)
+        "code_highlight": 1,   # MUST be an integer
+        "styles": {
+            "elementStyles": {...},  # Recommended: nested structure
+            # or direct style definitions: {"idle": {...}, "comparing": {...}}
+        }
+    },
+    "deltas": [
+        {
+            "code_highlight": 2,  # directly in delta, NOT nested in a frame
+            "operations": [[...]]
+        }
+    ]
+}
+```
+
+## 2. Data Structure Model (Aligned with the Renderer)
+
+Field naming rules (MUST be strictly followed):
+- Array/Graph/Tree: use the field structure
+- Table/DP: use the field data (NOT structure)
+- Mixing these is forbidden; otherwise the renderer cannot interpret the data
+
+### Array
+```python
+"data_state": {
+    "type": "array",
+    "structure": [  # MUST use the structure field
+        {"index": 0, "value": 5, "state": "idle"},
+        {"index": 1, "value": 3, "state": "comparing"}
+    ]
+}
+```
+
+### Graph
+```python
+"data_state": {
+    "type": "graph",
+    "structure": {  # MUST use the structure field
+        "nodes": [
+            {"id": "A", "label": "A", "styleKey": "idle_node", "properties": {"distance": 0}}
+        ],
+        "edges": [
+            {"from": "A", "to": "B", "directed": True, "label": "5", "styleKey": "normal_edge"}
+        ]
+    }
+}
+```
+
+### Table (Table / DP)
+```python
+"data_state": {
+    "type": "table",
+    "data": [[0, 1, 2], [1, 0, 1]],  # MUST use the data field (NOT structure!)
+    "options": {
+        "row_headers": ["A", "B"],      # MUST be an array or null, NOT a boolean
+        "col_headers": ["A", "B", "C"]  # MUST be an array or null, NOT a boolean
+    }
+}
+```
+
+### Tree
+```python
+"data_state": {
+    "type": "tree",
+    "structure": {  # MUST use the structure field
+        "root": "r",
+        "nodes": [
+            {"id": "r", "label": "root", "parent": None, "children": ["a", "b"],
+             "properties": {"key": 50}, "styleKey": "root_node"}
+        ]
+    }
+}
+```
+
+### Hashtable
+```python
+"data_state": {
+    "type": "hashtable",
+    "structure": {  # MUST use the structure field
+        "size": 8,
+        "buckets": [  # MUST be an array of objects, NOT a simple nested array [[]]
+            {"index": 0, "items": [{"key": "cat", "value": 1}]},
+            {"index": 1, "items": []}
+        ]
+    }
+}
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Complete Operation List]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Array Operations
+
+### updateStyle - Update array element styles
+```python
+{"op": "updateStyle", "params": {
+    "indices": [0, 1],        # required: list of integers
+    "styleKey": "comparing"  # required: style key
+}}
+```
+
+### updateValues - Update array element values (including swaps)
+```python
+# Swap elements (arr[i] ↔ arr[j])
+{"op": "updateValues", "params": {
+    "updates": [
+        {"index": i, "value": arr[j]},  # put arr[j] at position i
+        {"index": j, "value": arr[i]}   # put arr[i] at position j
+    ]
+}}
+```
+
+swapElements is forbidden (this operation does not exist).
+
+### moveElements - Move elements
+```python
+{"op": "moveElements", "params": {
+    "pairs": [{"fromIndex": 0, "toIndex": 1}],
+    "animationKey": "swap"  # optional
+}}
+```
+
+### shiftElements - Shift elements
+```python
+{"op": "shiftElements", "params": {
+    "shifts": [{"fromIndex": 2, "toIndex": 3}]
+}}
+```
+
+### updateBoundary - Add a boundary box
+```python
+{"op": "updateBoundary", "params": {
+    "type": "partition",
+    "range": [0, 3],
+    "styleKey": "boundary",
+    "label": "Partition"  # optional
+}}
+```
+
+### removeBoundary - Remove a boundary box
+```python
+{"op": "removeBoundary", "params": {
+    "type": "partition"
+}}
+```
+
+## Graph Operations
+
+### updateNodeStyle - Update node styles
+```python
+{"op": "updateNodeStyle", "params": {
+    "ids": ["A", "B"],           # required: list of node IDs
+    "styleKey": "current_node"    # required: style key
+}}
+```
+
+### updateNodeProperties - Update node properties
+```python
+{"op": "updateNodeProperties", "params": {
+    "updates": [
+        {"id": "A", "properties": {"distance": 5, "predecessor": "B"}}
+    ]
+}}
+```
+
+### updateEdgeStyle - Update edge styles
+```python
+{"op": "updateEdgeStyle", "params": {
+    "edges": [{"from": "A", "to": "B"}],
+    "styleKey": "relaxed_edge"
+}}
+```
+
+### updateEdgeProperties - Update edge properties
+```python
+{"op": "updateEdgeProperties", "params": {
+    "updates": [
+        {"from": "A", "to": "B", "properties": {"weight": 10}}
+    ]
+}}
+```
+
+### addNode - Add a node
+```python
+{"op": "addNode", "params": {
+    "node": {"id": "C", "label": "C", "styleKey": "idle_node"}
+}}
+```
+
+### removeNode - Remove a node
+```python
+{"op": "removeNode", "params": {
+    "id": "C"
+}}
+```
+
+### addEdge - Add an edge
+```python
+{"op": "addEdge", "params": {
+    "edge": {"from": "A", "to": "C", "directed": True, "label": "3"}
+}}
+```
+
+### removeEdge - Remove an edge
+```python
+{"op": "removeEdge", "params": {
+    "from": "A",
+    "to": "C"
+}}
+```
+
+## Table Operations
+
+### updateTableCell - Update table cell values
+```python
+# Update the main view (DP table)
+{"op": "updateTableCell", "params": {
+    "view_id": "data_state",  # Main view MUST use "data_state"
+    "updates": [
+        {"row": 0, "col": 1, "value": 5}
+    ]
+}}
+
+# Update an auxiliary view (variable panel)
+{"op": "updateTableCell", "params": {
+    "view_id": "vars_panel",  # Auxiliary views use custom IDs
+    "updates": [
+        {"row": 0, "col": 1, "value": "A"}
+    ]
+}}
+```
+
+### highlightTableCell - Highlight table cells
+```python
+{"op": "highlightTableCell", "params": {
+    "view_id": "data_state",
+    "cells": [{"row": 1, "col": 2}],
+    "styleKey": "current_cell"
+}}
+```
+
+### showDependency - Show dependency arrows
+```python
+{"op": "showDependency", "params": {
+    "view_id": "data_state",
+    "from_cells": [{"row": 0, "col": 1}, {"row": 1, "col": 0}],
+    "to_cell": {"row": 1, "col": 1},
+    "styleKey": "dep_arrow"
+}}
+```
+
+## List Operations
+
+### appendToList - Append to a list
+```python
+# Frontier (graph algorithms): format MUST be "id(score)"
+{"op": "appendToList", "params": {
+    "view_id": "frontier",
+    "value": "B(5)"  # MUST be a string "id(score)"
+}}
+
+# Ordinary list
+{"op": "appendToList", "params": {
+    "view_id": "queue",
+    "value": "item"
+}}
+```
+
+### popFromList - Remove from a list
+```python
+# By position (head/tail)
+{"op": "popFromList", "params": {
+    "view_id": "frontier",
+    "from": "head"  # or "tail"
+}}
+
+# By value (commonly used when updating frontier)
+{"op": "popFromList", "params": {
+    "view_id": "frontier",
+    "value": "B(5)"
+}}
+
+# By index
+{"op": "popFromList", "params": {
+    "view_id": "list",
+    "index": 2
+}}
+```
+
+### clearList - Clear a list
+```python
+{"op": "clearList", "params": {
+    "view_id": "frontier"
+}}
+```
+
+## Tree Operations
+
+### addChild - Add a child node
+```python
+{"op": "addChild", "params": {
+    "parent_id": "r",
+    "node": {"id": "c", "label": "C", "parent": "r", "children": []},
+    "index": 0  # optional insertion position
+}}
+```
+
+### removeChild - Remove a child node
+```python
+{"op": "removeChild", "params": {
+    "parent_id": "r",
+    "child_id": "c"
+}}
+```
+
+### reparent - Reattach a node under a new parent
+```python
+{"op": "reparent", "params": {
+    "node_id": "c",
+    "new_parent_id": "b",
+    "index": 0  # optional
+}}
+```
+
+### swapNodes - Swap two tree nodes
+```python
+{"op": "swapNodes", "params": {
+    "a_id": "x",
+    "b_id": "y",
+    "swap_children": False  # optional: whether to swap subtrees
+}}
+```
+
+### highlightPath - Highlight a path in the tree
+```python
+{"op": "highlightPath", "params": {
+    "from_id": "leaf",
+    "to_id": "root",
+    "styleKey": "path"
+}}
+```
+
+## Hashtable Operations
+
+### insertIntoBucket - Insert into a bucket
+```python
+{"op": "insertIntoBucket", "params": {
+    "bucket_index": 2,
+    "element": {"key": "cat", "value": 1}
+}}
+```
+
+### updateInBucket - Update an element in a bucket
+```python
+{"op": "updateInBucket", "params": {
+    "bucket_index": 2,
+    "key": "cat",
+    "value": 2
+}}
+```
+
+### removeFromBucket - Remove from a bucket
+```python
+{"op": "removeFromBucket", "params": {
+    "bucket_index": 2,
+    "key": "cat"
+}}
+```
+
+### showHash - Show hash computation
+```python
+{"op": "showHash", "params": {
+    "input_key": "cat",
+    "output_hash": 12345,
+    "bucket_index": 2
+}}
+```
+
+### highlightCollision - Highlight a collision
+```python
+{"op": "highlightCollision", "params": {
+    "bucket_index": 2,
+    "with_key": "dog"  # optional
+}}
+```
+
+### highlightBucket - Highlight a bucket
+```python
+{"op": "highlightBucket", "params": {
+    "bucket_index": 2,
+    "styleKey": "target"
+}}
+```
+
+## Auxiliary View Operations
+
+### addAuxView - Add an auxiliary view
+```python
+{"op": "addAuxView", "params": {
+    "view": {
+        "view_id": "vars_panel",
+        "type": "table",
+        "title": "Variables",
+        "data": [["current", None], ["alt", None]],
+        "options": {
+            "row_headers": ["current", "alt"],
+            "col_headers": ["name", "value"]
+        }
+    }
+}}
+```
+
+### removeAuxView - Remove an auxiliary view
+```python
+{"op": "removeAuxView", "params": {
+    "view_id": "vars_panel"
+}}
+```
+
+## Generic Operations
+
+### showComment - Show a comment
+```python
+# Global comment (most common)
+{"op": "showComment", "params": {
+    "text": "Algorithm completed!",  # MUST be "text", not "comment"
+    "anchor": "global"
+}}
+
+# Anchor to a node
+{"op": "showComment", "params": {
+    "text": "Current node",
+    "anchor": "node",
+    "ref": {"id": "A"}
+}}
+
+# Anchor to an edge
+{"op": "showComment", "params": {
+    "text": "Relaxing edge",
+    "anchor": "edge",
+    "ref": {"from": "A", "to": "B"}
+}}
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Extension Declarations]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You MUST declare extensions according to the data types and views you use:
+
+| Usage Scenario | Extension ID |
+|----------------|-------------|
+| Array (array)  | "svl-ext-primitive-array" |
+| Graph (graph)  | "svl-ext-primitive-graph" |
+| Tree (tree)    | "svl-ext-primitive-tree" |
+| Hashtable      | "svl-ext-primitive-hashtable" |
+| Table views (vars_panel / distance_table / dp_table) | "svl-ext-view-table" |
+| List views (frontier / queue / stack) | "svl-ext-view-list" |
+
+Example:
+```python
+"required_extensions": [
+    "svl-ext-primitive-graph",   # graph algorithm
+    "svl-ext-view-table",        # distance table
+    "svl-ext-view-list"          # frontier
+]
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Style System]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The renderer supports a single style definition format:
+
+### Method: Nested structure
+
+```python
+"styles": {
+    "elementStyles": {  # element styles (arrays / nodes / cells)
+        "idle": {"backgroundColor": "#F0F0F0", "textColor": "#000000"},
+        "comparing": {"backgroundColor": "#FFD700", "textColor": "#000000"},
+        "swapped": {"backgroundColor": "#90EE90", "textColor": "#000000"},
+        "current_node": {"backgroundColor": "#4CAF50", "textColor": "#FFFFFF"},
+        "visited_node": {"backgroundColor": "#CCCCCC", "textColor": "#000000"},
+        "current_cell": {"backgroundColor": "#FFD700", "borderColor": "#FFA500"}
+    },
+    "edgeStyles": {  # edge styles (graph algorithms)
+        "normal_edge": {"stroke": "#666666", "textColor": "#000000"},
+        "relaxed_edge": {"stroke": "#4CAF50", "textColor": "#4CAF50"}
+    },
+    "tempStyles": {  # temporary elements (arrows / boundaries)
+        "dep_arrow": {"color": "#FF0000", "strokeWidth": 2.5},
+        "arrow": {"color": "#FF0000", "strokeWidth": 2.5}
+    }
+}
+```
+
+Key style fields (aligned with the renderer):
+- Fill color: `backgroundColor` or `fill`
+- Border color: `borderColor` or `stroke` or `strokeColor`
+- Text color: `textColor` or `labelColor`
+- Line width: `strokeWidth` or `lineWidth`
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Algorithm Family Special Requirements]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Graph Algorithms (Dijkstra / BFS / Bellman-Ford)
+
+Required auxiliary views:
+1. frontier (type:"list"): format `"id(distance)"`, e.g. `"B(5)"`
+2. distance_table (type:"table"): a 1×N table, columns are node IDs
+3. vars_panel (type:"table"): a 2×2 table showing current and alt
+
+Synchronization rule when selecting node u:
+```python
+[[
+    {"op": "updateNodeStyle", "params": {"ids": ["u"], "styleKey": "current_node"}},
+    {"op": "updateTableCell", "params": {
+        "view_id": "vars_panel",
+        "updates": [{"row": 0, "col": 1, "value": "u"}]
+    }}
+]]
+```
+
+## DP Algorithms (Edit Distance / LCS / Knapsack)
+
+- The main view MUST use `type: "table"`
+- data MUST be a 2D array: `[[0,1,2], [1,0,1]]`
+- Any operation referencing the main view MUST use `view_id: "data_state"`
+- You MUST show dependency arrows (showDependency)
+
+Example:
+```python
+[[
+    {"op": "highlightTableCell", "params": {
+        "view_id": "data_state",
+        "cells": [{"row": i, "col": j}],
+        "styleKey": "current_cell"
+    }},
+    {"op": "updateTableCell", "params": {
+        "view_id": "data_state",
+        "updates": [{"row": i, "col": j, "value": dp_value}]
+    }},
+    {"op": "showDependency", "params": {
+        "view_id": "data_state",
+        "from_cells": [{"row": i-1, "col": j-1}],
+        "to_cell": {"row": i, "col": j},
+        "styleKey": "dep_arrow"
+    }}
+]]
+```
+
+## Sorting Algorithms (Bubble / Quick / Merge)
+
+- Use updateValues to swap elements, NOT moveElements
+- Use the comparing style for comparisons
+- Use the swapped style after a swap
+
+Example (swapping arr[j] and arr[j+1]):
+```python
+[[
+    # Highlight comparison first
+    {"op": "updateStyle", "params": {"indices": [j, j+1], "styleKey": "comparing"}},
+    # Perform the swap
+    {"op": "updateValues", "params": {
+        "updates": [
+            {"index": j, "value": arr[j+1]},
+            {"index": j+1, "value": arr[j]}
+        ]
+    }},
+    # Mark as swapped
+    {"op": "updateStyle", "params": {"indices": [j, j+1], "styleKey": "swapped"}}
+]]
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Generation Workflow] Three-Version Self-Verification
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Step 1: Generate Version 1 (Quick Draft)
+
+Focus on:
+- Algorithm logic completely correct
+- Basically runnable
+- May have formatting or minor detail issues
+
+## Step 2: Self-Check
+
+Check the 13 hard rules + field alignment:
+
+```
+[Self-Check List]
+□ Rule 1 (svl_version): ✓ correct / ✗ error: ___
+□ Rule 2 (operations 2D): ✓ correct / ✗ error: three places use a 1D array
+□ Rule 3 (code_highlight): ✓ correct / ✗ error: delta 5 uses None
+□ Rule 4 (no Infinity): ✓ correct / ✗ error: ___
+□ Rule 5 (legal type): ✓ correct / ✗ error: ___
+□ Rule 6 (DP uses table): ✓ correct / ✗ error: ___
+□ Rule 7 (view_id): ✓ correct / ✗ error: used "dp_table" should be "data_state"
+□ Rule 8 (executable): ✓ correct / ✗ error: ___
+□ Rule 9 (algorithm correct): ✓ correct / ✗ error: ___
+□ Rule 10 (operation names): ✓ correct / ✗ error: used swapElements
+□ Rule 11 (Delta structure): ✓ correct / ✗ error: delta contains a frame field
+□ Rule 12 (variable naming): ✓ correct / ✗ error: has Chinese variable names
+□ Rule 13 (data sync): ✓ correct / ✗ error: used updateTableCell and then read dp[i][j]
+
+[Field Alignment Check]
+□ Delta structure: {"code_highlight": ..., "operations": [[...]]} (no frame field)
+□ Style definitions: nested or direct (both supported)
+□ updateTableCell params: view_id, updates (NOT cells/data)
+□ appendToList params: view_id, value (NOT item/element)
+□ showComment params: text, anchor (NOT comment/message)
+□ showDependency params: view_id, from_cells, to_cell (NOT source/target)
+□ Style fields: backgroundColor, textColor, strokeColor (NOT generic color/fill)
+```
+
+## Step 3: Generate Version 2 (Fixed Version)
+
+Based on the self-check results, fix ALL issues from Version 1.
+
+## Step 4: Final Verification
+
+Simulate the first three iterations of the algorithm and verify:
+- Data structure changes are correct
+- The operation sequence is reasonable
+- Intermediate values match expectations
+
+```
+[Final Verification]
+Input: [5, 2, 8, 1]
+Iteration 1: i=0, j=1, compare 5 and 2, swap → [2,5,8,1]
+Iteration 2: i=0, j=2, compare 5 and 8, no swap → [2,5,8,1]
+Iteration 3: i=0, j=3, compare 8 and 1, swap → [2,5,1,8]
+✓ Verification passed
+```
+
+## Step 5: Generate Version 3 (Final Submission)
+
+Ensure:
+- All 13 hard rules are satisfied
+- All fields are aligned with the renderer
+- Delta structure is correct (no frame field)
+- Style definitions are correct
+- Data synchronization is correct (update Python variables first, then render)
+- Algorithm logic has been verified
+- The code can be run directly
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Output Format] Explicit Three-Version Output
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Important: You MUST output in the following format to show the full improvement process!
+
+```
+[Version 1: Quick Draft]
+```python
+import json
+# [Version 1 code - quickly implements the algorithm logic]
+...
+```
+
+[Self-Check]
+Problems found:
+1. [Description of issue 1]
+2. [Description of issue 2]
+...
+
+[Version 2: Fixed Version]
+```python
+import json
+# [Version 2 code - fixes the issues in Version 1]
+...
+```
+
+[Final Verification]
+Algorithm logic verification:
+- [Check point 1]
+- [Check point 2]
+
+Field alignment check:
+- [Check item 1]
+- [Check item 2]
+
+[Version 3: Final Submission]
+```python
+import json
+# [Version 3 code - perfectly follows all specifications]
+...
+```
+```
+
+Format requirements:
+1. You MUST include three Python code blocks (Version 1, Version 2, Version 3)
+2. You MUST include textual descriptions for self-check and final verification
+3. Each code block MUST be complete and executable
+4. Version 3 is the code that will actually be used
+
+Forbidden:
+- Only outputting a single version
+- Skipping self-check or final verification
+- Providing incomplete code blocks
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Code Template]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+```python
+import json
+
+# Input data
+input_data = {
+    # [Fill according to the algorithm requirements]
+}
+
+def main():
+    # Build trace
+    trace = {
+        "svl_version": "5.0",
+        "algorithm": {
+            "name": "AlgorithmName",
+            "family": "AlgorithmFamily"
+        },
+        "required_extensions": [
+            "svl-ext-primitive-array"  # adjust as needed
+        ],
+        "initial_frame": {
+            "data_schema": {},
+            "data_state": {
+                "type": "array",
+                "structure": [...]
+            },
+            "auxiliary_views": [],
+            "variables_schema": [],
+            "pseudocode": [
+                "line 1",
+                "line 2"
+            ],
+            "code_highlight": 1,
+            "styles": {
+                # Method 1: recommended nested structure (clearer)
+                "elementStyles": {
+                    "idle": {"backgroundColor": "#F0F0F0", "textColor": "#000000"},
+                    "comparing": {"backgroundColor": "#FFD700", "textColor": "#000000"}
+                }
+                # Method 2: direct style definitions (also supported)
+                # "idle": {"backgroundColor": "#F0F0F0", "textColor": "#000000"},
+                # "comparing": {"backgroundColor": "#FFD700", "textColor": "#000000"}
+            }
+        },
+        "deltas": []
+    }
+    
+    # Algorithm execution logic
+    # Example: add one delta
+    trace["deltas"].append({
+        "code_highlight": 2,  # directly in delta
+        "operations": [[     # 2D array
+            {"op": "updateStyle", "params": {"indices": [0], "styleKey": "comparing"}}
+        ]]
+    })
+    
+    # Write trace.json
+    with open('trace.json', 'w', encoding='utf-8') as f:
+        json.dump(trace, f, ensure_ascii=False, indent=2)
+    
+    print("trace.json generated successfully")
+
+if __name__ == "__main__":
+    main()
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Common Error Checklist] (Aligned with the Renderer)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Before submitting Version 3, re-check the following:
+
+A delta contains a "frame" field {"frame": {...}, "operations": [...]}
+It SHOULD be {"code_highlight": 2, "operations": [[...]]}
+
+Style definition syntax or field names are incorrect
+Two style formats are supported: nested {"elementStyles": {"idle": ...}} or direct {"idle": ...}
+
+operations is written as a 1D array [{"op": ...}]
+It SHOULD be a 2D array [[{"op": ...}]]
+
+code_highlight is None or missing
+It SHOULD be an integer or an array of integers
+
+updateTableCell uses "cells" or "data" as params
+It SHOULD use "view_id" and "updates"
+
+showComment uses "comment" or "message"
+It SHOULD use "text" and "anchor"
+
+frontier is formatted as "B" or {"id":"B","dist":5}
+It SHOULD be the string "B(5)"
+
+The main view uses "view_id": "dp_table"
+It SHOULD be "view_id": "data_state"
+
+A DP algorithm uses "type": "dp"
+It SHOULD be "type": "table"
+
+Distances use the string "Infinity"
+You SHOULD use None or null instead
+
+Array swaps use {"op": "swapElements"}
+You SHOULD use updateValues to swap two elements
+
+Mutable structures (list/dict/nested arrays, etc.) are written into trace (initial_frame or updateValues) as references
+You MUST write a snapshot: perform a deep copy (e.g. copy.deepcopy(x) or json.loads(json.dumps(x))) before writing into trace
+  Otherwise, historical frames can be polluted by final state (appearing unchanged throughout rendering)
+
+Variable names use Chinese
+All variable names MUST be in English
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Internal Checklist] MUST be completed before generation (DO NOT output)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Stage 1: Algorithm Logic Verification
+- [ ] Are all core steps complete? (no missing key steps)
+- [ ] Is the execution order correct? (especially loops and conditions)
+- [ ] Are boundary cases handled? (empty input, single element, maximum values)
+- [ ] For graph algorithms: are adjacency lists sorted?
+- [ ] For DP: are base cases correctly initialized?
+- [ ] For sorting: are comparison conditions correct?
+
+## Stage 2: Hard Rule Check
+- [ ] svl_version = "5.0" (string)
+- [ ] operations = [[...]] (2D array)
+- [ ] code_highlight is integer or array of integers (present in each delta)
+- [ ] No Infinity (use None instead)
+- [ ] data_state.type in {array, graph, table, tree, hashtable}
+- [ ] DP uses type:"table" + 2D data
+- [ ] DP view_id="data_state" (not dp_table)
+- [ ] Code is fully executable (import → Plan → input → main → call)
+- [ ] Algorithm logic 100% correct
+- [ ] Arrays use updateValues (no swapElements)
+- [ ] Delta is {code_highlight:N, operations:[[...]]} (no frame field)
+- [ ] All variable names are in English
+- [ ] Python variables are updated before calling updateTableCell and other rendering ops
+
+## Stage 3: Algorithm Family-Specific Check
+- [ ] Graph algorithms (if applicable): frontier (type:"list", view_id:"frontier") is present
+- [ ] Graph algorithms: distance_table (type:"table", view_id:"distance_table") is present
+- [ ] Graph algorithms: frontier format is "B(5)" (not "B" or an object)
+- [ ] On relaxation, node properties + distance_table + frontier are synchronously updated
+
+- [ ] DP algorithms (if applicable): main view type:"table"
+- [ ] DP: main view data is a 2D array
+- [ ] DP: updateTableCell uses view_id="data_state"
+- [ ] DP: showDependency uses view_id="data_state"
+
+- [ ] Array/Sorting (if applicable): updateValues used for swaps (with full post-swap state)
+- [ ] Array/Sorting: comparing applied before swapping
+
+## Stage 4: Field Alignment Check
+- [ ] Delta structure: {code_highlight:N, operations:[[...]]} (no frame field)
+- [ ] Operation params: all op param names match those expected by the renderer
+- [ ] required_extensions includes all used extensions
+- [ ] pseudocode in initial_frame is a list[str]
+
+## Stage 5: Simulate the First Three Iterations
+
+Manually trace the first three key operations of the algorithm and verify variable values and data structure changes:
+
+DP algorithm example (Fibonacci):
+```
+Input: n=5
+Initial state: dp=[0,1,0,0,0,0]
+
+Iteration 1 (i=2):
+  - dp[2] = dp[1] + dp[0] = 1 + 0 = 1
+  - operations: updateTableCell(row:0, col:2, value:1)
+  - Verification: ✓ dp array [0,1,1,0,0,0]
+
+Iteration 2 (i=3):
+  - dp[3] = dp[2] + dp[1] = 1 + 1 = 2
+  - operations: updateTableCell(row:0, col:3, value:2)
+  - Verification: ✓ dp array [0,1,1,2,0,0]
+
+Iteration 3 (i=4):
+  - dp[4] = dp[3] + dp[2] = 2 + 1 = 3
+  - operations: updateTableCell(row:0, col:4, value:3)
+  - Verification: ✓ dp array [0,1,1,2,3,0]
+```
+
+Graph algorithm example (BFS):
+```
+Initial state: queue=["A"], visited={"A"}, dist={"A":0}
+
+Iteration 1:
+  - current = queue.pop(0) = "A"
+  - neighbors: ["B","C"] (already sorted)
+  - B not visited: queue.append("B"), visited.add("B"), dist["B"]=1
+  - C not visited: queue.append("C"), visited.add("C"), dist["C"]=1
+  - Verification: ✓ queue=["B","C"], visited={"A","B","C"}, dist={"A":0,"B":1,"C":1}
+
+Iteration 2:
+  - current = queue.pop(0) = "B"
+  - neighbors: ["D"]
+  - D not visited: queue.append("D"), visited.add("D"), dist["D"]=2
+  - Verification: ✓ queue=["C","D"], visited={"A","B","C","D"}
+```
+
+Checkpoints:
+- [ ] Python variable values match expectations (dp[i], dist[v], visited, etc.)
+- [ ] Values referenced in operations are correct (e.g. value in updateTableCell)
+- [ ] code_highlight corresponds to the correct source code line
+- [ ] Auxiliary views are updated synchronously (vars_panel, distance_table, frontier)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Start Generation]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Now, based on the algorithm requirements provided below, generate the tracker code strictly following the above workflow.
+
+Key reminders:
+1. You MUST output three Python code blocks (Version 1, Version 2, Version 3)
+2. You MUST show the self-check and final verification process
+3. Ensure all fields are strictly aligned with the renderer
+4. Algorithm logic MUST be 100% correct (highest priority)
+5. Version 3 is the final perfect code that will be used
+6. It is absolutely forbidden to ask the user any questions! Directly generate code based on the input data!
+
+Strictly follow the requirements in the [Output Format] section when producing your output!

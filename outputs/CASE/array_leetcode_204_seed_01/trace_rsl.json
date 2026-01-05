@@ -1,0 +1,118 @@
+{
+  "meta": {
+    "rsl_version": "0.1",
+    "notes": "Sieve of Eratosthenes visualization with enhanced clarity and pacing"
+  },
+  "theme": {
+    "background": "#FFFFFF",
+    "text": "#000000",
+    "primary": "#2563EB",
+    "secondary": "#DC2626",
+    "accent": "#16A34A"
+  },
+  "timeline": {
+    "coalesce_minor_frames": true,
+    "max_fps_for_changes": 15,
+    "transition": 0.5,
+    "pause": 0.3
+  },
+  "layout": {
+    "main": {
+      "type": "horizontal_array",
+      "params": {
+        "spacing": 0.5,
+        "cell_size": 1.0
+      }
+    }
+  },
+  "rules": [
+    {
+      "when": {
+        "op": "showComment"
+      },
+      "do": {
+        "animation": {
+          "variant": "fade",
+          "run_time": 0.8,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "when": {
+        "op": "updateStyle"
+      },
+      "do": {
+        "animation": {
+          "variant": "pulse",
+          "run_time": 0.6,
+          "scale": 1.2
+        }
+      }
+    },
+    {
+      "when": {
+        "op": "updateTableCell"
+      },
+      "do": {
+        "animation": {
+          "variant": "glow",
+          "run_time": 0.4
+        }
+      }
+    },
+    {
+      "when": {
+        "op": "updateValues"
+      },
+      "do": {
+        "animation": {
+          "variant": "pulse",
+          "run_time": 0.3
+        }
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "frame": 0,
+      "type": "text",
+      "label": "Initialize array with numbers 2-10",
+      "color": "#2563EB",
+      "position": [
+        0,
+        -2
+      ]
+    },
+    {
+      "frame": 2,
+      "type": "text",
+      "label": "Mark multiples of 2 as non-prime",
+      "color": "#DC2626",
+      "position": [
+        0,
+        -2
+      ]
+    },
+    {
+      "frame": 6,
+      "type": "text",
+      "label": "Mark multiples of 3 as non-prime",
+      "color": "#DC2626",
+      "position": [
+        0,
+        -2
+      ]
+    },
+    {
+      "frame": 12,
+      "type": "text",
+      "label": "Remaining numbers are prime",
+      "color": "#16A34A",
+      "position": [
+        0,
+        -2
+      ]
+    }
+  ]
+}
